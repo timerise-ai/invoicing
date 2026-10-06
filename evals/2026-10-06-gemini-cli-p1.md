@@ -1,0 +1,25 @@
+---
+agent: gemini-cli
+agentVersion: 0.62.0
+model: gemini-3.8-flash
+date: 2026-10-06
+skillVersion: 0.1.1
+promptIndex: 1
+prompt: "Add invoicing to this app: staff issue VAT invoices with numbers that
+  never skip, can issue a correction when one is wrong, see them all in a list,
+  and download each as a PDF."
+stack: No data store
+durationMinutes: 12
+turns: null
+interventions: 0
+checks:
+  typecheck: pass
+  build: pass
+  tests: pass
+result: pass
+filesChanged: 28
+linesAdded: 5508
+isolated: true
+timedOut: false
+runUrl: https://github.com/timerise-ai/invoicing/actions/runs/37519582665
+---
