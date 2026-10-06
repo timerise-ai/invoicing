@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2026-10-06
+
+Documentation-only release: the templates, the references' rules and the non-negotiables are unchanged from
+0.1.0. Wording brought in line with the skill standard.
+
+### Changed
+
+- `CLAUDE.md`, the README verification recipe, `references/provenance.md` and `references/adaptation.md`
+  describe the audit against the earlier implementation in the standard's wording.
+- `CLAUDE.md` gains the single-suite test run and the rule that every changed factual claim is sourced and
+  every template change gets its `provenance.md` entry.
+
 ## [0.1.0] - 2026-10-03
 
 First release. A VAT invoicing module for a Next.js App Router app: numbering, corrections, a register, a
