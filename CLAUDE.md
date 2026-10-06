@@ -41,12 +41,12 @@ own tests. That file is the rationale layer: read it before "simplifying" anythi
 
 - **Code blocks name their destination on the first line** as a comment, for example
   `// lib/invoicing/model.ts` or `-- db/migrations/0001_invoicing.sql`. A `typescript` block with no such
-  line continues the file named by the block before it in the same reference. That line is what makes a
-  block extractable, so keep it and keep imports complete.
+  line continues the file named by the block before it in the same reference. That line is what lets a
+  block be written to its file, so keep it and keep imports complete.
 - **The fence language says whether a block is compiled.** `typescript`, `tsx` and `sql` blocks are
-  templates and are extracted. `ts` blocks are sketches of host code (the `pg` wiring line, the bridge
+  templates and are compiled. `ts` blocks are sketches of host code (the `pg` wiring line, the bridge
   wiring, the status-cron calls, the mail job, the source type) and are not.
-- **The templates are compiled and run.** Extract every `typescript`, `tsx` and `sql` block to its named
+- **The templates are compiled and run.** Write every `typescript`, `tsx` and `sql` block to its named
   path in a scratch directory, then
 
   ```bash
@@ -58,6 +58,9 @@ own tests. That file is the rationale layer: read it before "simplifying" anythi
 
   `skipLibCheck` is not optional, or Next's own declarations fail the run. Do not set `baseUrl`. Re-run
   after editing any block. A change to `fa3-xml.md` also needs the `xmllint` run that file describes.
+  One suite at a time: `npx vitest run lib/invoicing/model.test.ts` (or `bun test <file>`). The suites
+  come from `testing.md` (`model.test.ts`, `invoice-pdf.test.ts`), `testing-service.md`
+  (`service.test.ts`), `fa3-xml.md` and `ksef-bridge.md` (`ksef/fa3-xml.test.ts`, `ksef/bridge.test.ts`).
 - **Identifiers are shared across files.** `VAT_RATES`, `VatRate`, `roundMoney`, `computeLine`,
   `computeTotals`, `vatSummary`, `formatInvoiceNumber`, `buildCorrectionLines`, `validateLines`,
   `InvoiceError`, `InvoiceErrorCode`, `INVOICE_SERIES`, `Invoice`, `InvoiceWithLines`, `NewInvoice`,
@@ -103,3 +106,8 @@ own tests. That file is the rationale layer: read it before "simplifying" anythi
   label tables are meant to be renamed by the host, and `adaptation.md` carries that procedure. The type
   and function names in `lib/invoicing`, the `invoicing:<code>` prefix and the FA(3) element names are the
   authoring contract and are not renamed.
+- **Changes are sourced and recorded.** A changed factual claim is verified against the FA(3) schema with
+  `xmllint`, the PDF 1.4 reference and Helvetica metrics, PostgreSQL's documentation or a reproduction,
+  never from memory, and any change to a template gets its entry in `provenance.md`. Commits follow
+  Conventional Commits; `CHANGELOG.md` follows Keep a Changelog and SemVer, and releases follow
+  STANDARD.md in the skills index.

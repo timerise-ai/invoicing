@@ -135,7 +135,7 @@ through a data API that caps a response at a fixed number of rows.
   are right, and the rule is small enough to reason about.
 - **Payment is set once.** There is no "unpaid" action. It keeps the guard trigger simple; a payments
   table is the extension.
-- **A chosen issue date, and the series year taken from it.** Month-end work needs it. The consequence for
+- **A chosen issue date, and the series year read from it.** Month-end work needs it. The consequence for
   chronology is in [operations.md](operations.md).
 - **No stored PDF.** The document is rendered from immutable rows on every request.
 - **No PDF library, no embedded font, no compression.** Small deterministic output, at the cost of scripts
@@ -171,7 +171,7 @@ Designed here. These have run in the skill's own tests and scratch database and 
 
 ## How the templates were checked
 
-Every TypeScript block was extracted to its named path and compiled with TypeScript 5.9 under `strict` and
+Every TypeScript block was written to its named path and compiled with TypeScript 5.9 under `strict` and
 `noUncheckedIndexedAccess`. The five suites, 72 tests, ran under vitest 4 and under bun. The service and
 bridge suites also ran against the Postgres store on PostgreSQL 18. The migration and the SQL checks ran
 on the same database, with twenty parallel issues and four parallel corrections. Five documents from the

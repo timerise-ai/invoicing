@@ -8,7 +8,7 @@ before writing a file: a seam that is not named gets hardcoded.
 | Seam | The skill ships | The host supplies |
 |---|---|---|
 | Domain entities | Canonical names and the rename table below | Its own vocabulary |
-| Tenant scope | One `tenantId` on every row, taken from the actor | Organisation, workspace, company, or a constant for a single-company app |
+| Tenant scope | One `tenantId` on every row, read from the actor | Organisation, workspace, company, or a constant for a single-company app |
 | Auth guard | `InvoiceActor` and `getInvoiceActor()` in [service.md](service.md) | Its session lookup and its two permissions, read and write |
 | Seller profile | `SellerProfile` and `loadSeller(tenantId)` | The tenant's name, tax identifier, address, bank account, payment terms, exemption basis, currency |
 | Data access | `InvoiceStore`, an in-memory store, a Postgres store and migration | Its database client, behind `Queryable` or its own implementation of the interface |

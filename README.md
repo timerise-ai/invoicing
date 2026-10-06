@@ -138,9 +138,9 @@ Everything else is the host app's: auth, tenancy, the company profile, component
 
 ## Verification
 
-Every TypeScript block in `references/` names its destination file and is meant to be extracted and
-compiled. The blocks form one project: extract each to its path in a scratch directory with TypeScript,
-`next`, `react`, `vitest`, `qrcode` and their types installed, then
+Every TypeScript block in `references/` names its destination file and is meant to be written to
+that file and compiled. The blocks form one project: write each to its path in a scratch directory with
+TypeScript, `next`, `react`, `vitest`, `qrcode` and their types installed, then
 
 ```bash
 npx tsc --noEmit        # strict, noUncheckedIndexedAccess, skipLibCheck, jsx react-jsx, paths {"@/*": ["./*"]}
