@@ -23,3 +23,5 @@ isolated: true
 timedOut: false
 runUrl: https://github.com/timerise-ai/invoicing/actions/runs/37651286597
 ---
+
+Rubric 8/8, scored from the summary. The shipped suites ran under vitest (57), the in-memory store is wired as shipped, and `getInvoiceActor` keeps returning null "rather than inventing arbitrary default users". Only the eight `INVOICE_*` variables, with the template's own defaults, are listed empty in `.env.example`. The handover section states the 401, the store that forgets on restart, and the seller name that issuing needs.
