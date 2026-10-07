@@ -23,3 +23,5 @@ isolated: true
 timedOut: false
 runUrl: https://github.com/timerise-ai/invoicing/actions/runs/37519582665
 ---
+
+Rubric 5/8, scored from the summary. The skill's 57 tests ran under vitest, the memory store is wired as shipped, and no template edit is mentioned. `getInvoiceActor` defaults to a read-write staff actor, switchable off with an invented `INVOICE_AUTH_DISABLED` (item 4). The seller fields fall back to an invented "Acme sp. z o.o.", so documents can be issued under a seller that does not exist, and three variables are invented (item 6). The handover does not say an unset seller name blocks issuing, because its defaults removed that state (item 8).
