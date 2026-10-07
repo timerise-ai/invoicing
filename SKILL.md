@@ -117,6 +117,22 @@ optional:  service --EInvoicePort--> ksef bridge --FA(3) XML--> ksef skill (send
 
 With no database yet, steps 1 to 5 and 7 give a working module on the in-memory store.
 
+## A bare app: no sign-in, no database, no test runner
+
+The templates already cover it. Copy them and add nothing in their place:
+
+- **No sign-in.** `getInvoiceActor` keeps the template's `return null`, so every invoice route answers 401
+  until the host's session lookup replaces it. Never build a login, read users or a password from the
+  environment, or return a default actor: that is the security boundary, and the skill ships none.
+- **No database.** Keep the in-memory store as the wiring file creates it. Write no other store and add no
+  database client; the persistent one is [postgres.md](references/postgres.md), on the host's own client.
+- **No test runner.** `npm i -D vitest`, and `npm i server-only` if it is missing: the package registry is
+  not an external service. Run the suites as written; never rewrite their imports or swap their runner.
+- **Configuration.** Only the eight `INVOICE_*` variables in [operations.md](references/operations.md), with
+  the template's defaults and no others. An example env file lists all eight, every value empty.
+- **Handover.** Say that every invoice route answers 401 until `getInvoiceActor` reads the app's session,
+  that the in-memory store forgets on restart, and that nobody can issue until `INVOICE_SELLER_NAME` is set.
+
 ## Reference directory
 
 | Scenario | Trigger keywords | Reference |

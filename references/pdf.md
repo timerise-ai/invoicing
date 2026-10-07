@@ -270,6 +270,13 @@ export function renderInvoicePdf(
   /** The lowest y a table row may use: above the verification code on the page that carries it. */
   const floor = (p: PdfPage): number => (qr && p === firstPage ? QR_TOP + 14 : 130);
   let y = A4.height - MARGIN - 8;
+  /** A reason or an address has no length limit: a row that would cross the floor starts a new page. */
+  const room = (height: number): void => {
+    if (y - height < floor(page)) {
+      page = doc.addPage();
+      y = A4.height - MARGIN;
+    }
+  };
 
   // Header
   page.text(MARGIN, y, data.isCorrection ? s.titleCorrection : s.titleBase, { font: "bold", size: 17 });
@@ -285,6 +292,7 @@ export function renderInvoicePdf(
   y -= 14;
   if (data.isCorrection && data.correctionReason) {
     for (const row of wrapText(`${s.correctionReason}: ${data.correctionReason}`, 9, RIGHT - MARGIN)) {
+      room(12);
       page.text(MARGIN, y, row, { size: 9, gray: 0.25 });
       y -= 12;
     }
@@ -295,6 +303,7 @@ export function renderInvoicePdf(
   // Parties, side by side, each wrapped inside its own column
   const colB = A4.width / 2 + 10;
   const partyWidth = RIGHT - colB;
+  room(25);
   page.text(MARGIN, y, s.seller, { font: "bold", size: 8, gray: 0.4 });
   page.text(colB, y, s.buyer, { font: "bold", size: 8, gray: 0.4 });
   y -= 13;
@@ -303,6 +312,7 @@ export function renderInvoicePdf(
   for (let i = 0; i < Math.max(sellerRows.length, buyerRows.length); i++) {
     const left = sellerRows[i];
     const right = buyerRows[i];
+    room(12);
     if (left) page.text(MARGIN, y, left.text, left.head ? { font: "bold", size: 10 } : { size: 9, gray: 0.2 });
     if (right) page.text(colB, y, right.text, right.head ? { font: "bold", size: 10 } : { size: 9, gray: 0.2 });
     y -= 12;

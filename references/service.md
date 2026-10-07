@@ -423,24 +423,27 @@ import type { InvoiceStore } from "./store";
 const globalForInvoicing = globalThis as typeof globalThis & { __invoiceStore?: InvoiceStore };
 const store: InvoiceStore = (globalForInvoicing.__invoiceStore ??= createMemoryInvoiceStore());
 
-/** Single-company default: the seller comes from the environment. A multi-tenant host reads its tenant row. */
+/**
+ * Single-company default: the seller comes from the environment. A multi-tenant host reads its tenant row.
+ * `||`, not `??`: an example file copied with empty values sets each variable to "", which must mean unset.
+ */
 async function loadSeller(_tenantId: string): Promise<SellerProfile | null> {
   const name = process.env.INVOICE_SELLER_NAME;
   if (!name) return null;
   return {
     name,
-    taxId: process.env.INVOICE_SELLER_TAX_ID ?? null,
-    address: process.env.INVOICE_SELLER_ADDRESS ?? null,
-    bankAccount: process.env.INVOICE_SELLER_BANK_ACCOUNT ?? null,
-    paymentTermsDays: Number(process.env.INVOICE_PAYMENT_TERMS_DAYS ?? 14),
-    vatExemptionBasis: process.env.INVOICE_VAT_EXEMPTION_BASIS ?? null,
-    currency: process.env.INVOICE_CURRENCY ?? "PLN",
+    taxId: process.env.INVOICE_SELLER_TAX_ID || null,
+    address: process.env.INVOICE_SELLER_ADDRESS || null,
+    bankAccount: process.env.INVOICE_SELLER_BANK_ACCOUNT || null,
+    paymentTermsDays: Number(process.env.INVOICE_PAYMENT_TERMS_DAYS || 14),
+    vatExemptionBasis: process.env.INVOICE_VAT_EXEMPTION_BASIS || null,
+    currency: process.env.INVOICE_CURRENCY || "PLN",
   };
 }
 
 /** Today in the business time zone. The server's own zone is UTC on most hosts, which is a day off at night. */
 function today(): string {
-  const timeZone = process.env.INVOICE_TIME_ZONE ?? "Europe/Warsaw";
+  const timeZone = process.env.INVOICE_TIME_ZONE || "Europe/Warsaw";
   return new Intl.DateTimeFormat("en-CA", { timeZone }).format(new Date());
 }
 

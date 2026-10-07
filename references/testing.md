@@ -14,10 +14,12 @@ schema. The database has its own checks, in [testing-service.md](testing-service
 | `lib/invoicing/ksef/bridge.test.ts` | 6 | In [ksef-bridge.md](ksef-bridge.md) |
 
 ```bash
+npm i -D vitest                     # only if the host has no runner; bun needs nothing
 npx vitest run lib/invoicing        # or: bun test lib/invoicing
 ```
 
-Wire them to `npm test` in the host. The three core files import nothing outside `lib/invoicing`.
+Wire them to `npm test` in the host. Run the files as written: a rewritten import or a shimmed `expect` is
+a suite that no longer proves what this page says it does. The three core files import nothing outside `lib/invoicing`.
 
 ## The model
 
@@ -108,6 +110,8 @@ describe("roundMoney", () => {
   it("rounds half away from zero and never returns negative zero", () => {
     expect(roundMoney(0.125)).toBe(0.13);
     expect(roundMoney(-0.125)).toBe(-0.13);
+    expect(roundMoney(10.075)).toBe(10.08); // stored as 10.07499...: the half must survive the scaling
+    expect(roundMoney(0.125 * 80.6)).toBe(10.08);
     expect(Object.is(roundMoney(-0.001), 0)).toBe(true);
   });
 });
@@ -394,6 +398,22 @@ describe("the verification code", () => {
       const intruders = firstPageText(s).filter((t) => t.y > 60 && t.y < 150 && t.x > 60);
       expect(intruders, `${count} lines`).toEqual([]);
     }
+    // A reason or a buyer address has no length limit: its rows go on to the next page, never off this one.
+    const long = Array.from({ length: 700 }, (_, i) => `word${i}`).join(" ");
+    const s = latin1(
+      renderInvoicePdf(
+        data(many(1), {
+          isCorrection: true,
+          correctionReason: long,
+          buyer: { name: "Buyer", taxId: null, address: long },
+          verification: { matrix, label: "OFFLINE" },
+        }),
+      ),
+    );
+    expect(firstPageText(s).filter((t) => t.y > 60 && t.y < 150 && t.x > 60)).toEqual([]);
+    const ys = [...s.matchAll(/1 0 0 1 [-\d.]+ ([-\d.]+) Tm/g)].map((m) => Number(m[1]));
+    expect(Math.min(...ys)).toBeGreaterThanOrEqual(36);
+    expect(s).toContain("word699");
   });
 });
 ```

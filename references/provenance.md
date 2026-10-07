@@ -3,8 +3,9 @@
 The engineering ledger for whoever edits this skill. The templates were written by the engineer who has
 shipped this module, and audited against the earlier implementation: an invoicing section inside a
 multi-tenant Next.js business application on Postgres, with VAT invoices, corrections, a PDF and a KSeF
-integration. Three lists follow and they are kept apart: what the audit changed, what was kept on purpose,
-and what is new in the skill and has never run outside its own tests.
+integration. Four lists follow and they are kept apart: what the audit changed, what was kept on purpose,
+what is new in the skill and has never run outside its own tests, and the defects that agent evals found in
+a released template.
 
 ## Changed by the audit
 
@@ -168,6 +169,23 @@ Designed here. These have run in the skill's own tests and scratch database and 
 - `InvoiceLinesEditor` in bare HTML elements.
 - Everything under *Other data layers* in [postgres.md](postgres.md) and *Extensions* in
   [operations.md](operations.md): designs, not run.
+
+## Found by the agent evals
+
+Defects in a released template, found when an eval agent changed the template and a probe confirmed the
+claim. Each was fixed in the template, and the suites gained an assertion that fails on the old code.
+
+- **`roundMoney` lost some halves (0.1.2).** `Math.round((x + Number.EPSILON) * 100)` adds an epsilon too
+  small to matter above 1: 10.075 is stored as 10.07499..., and it rounded to 10.07. A sweep of quantity
+  and price products, checked against integer arithmetic, found thousands that rounded the wrong way. The
+  scaled value is now cut to 15 significant digits before rounding, and the same sweep finds none.
+  Symmetry (entry 7) was never affected.
+- **The header and the parties did not break pages (0.1.2).** A correction reason or a buyer address has no
+  length limit, and a few thousand characters ran the rows below the bottom margin and through the
+  verification code (entry 9). Those rows now start a new page at the same floor as table rows.
+- **An empty variable was not unset (0.1.2).** The wiring read the environment with `??`, so an example
+  file copied with empty values set the time zone to "" and every issue threw, and set the payment terms
+  to 0 days. It reads with `||`. The wiring file is outside the suites; the fix was checked by hand.
 
 ## How the templates were checked
 

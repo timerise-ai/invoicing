@@ -17,15 +17,17 @@ pass, and that check runs in a scratch project; the recipe is under *Editing con
 The skill was written by the engineer who has shipped this module; the earlier implementation it was audited
 against was an invoicing section in a multi-tenant business application on Postgres.
 `references/provenance.md` is the ledger of that audit: sixteen entries on what changed and how the
-templates verify it, what was kept deliberately, and what was designed here and has run only in the skill's
-own tests. That file is the rationale layer: read it before "simplifying" anything.
+templates verify it, what was kept deliberately, what was designed here and has run only in the skill's
+own tests, and the template defects the agent evals found. That file is the rationale layer: read it
+before "simplifying" anything.
 
 ## Structure
 
 - `SKILL.md`: entry point, loaded whole on every activation, so it stays between 130 and 160 lines, the
   closing index line aside. The frontmatter `description` is the trigger surface; the body carries the
-  architecture diagram, seven **critical facts**, six **hard rules**, the quick-start order, the **reference
-  directory table** mapping trigger keywords to files, and a closing line linking the skills index.
+  architecture diagram, seven **critical facts**, six **hard rules**, the quick-start order, the **bare app**
+  clauses (no sign-in, no database, no runner, configuration, handover), the **reference directory table**
+  mapping trigger keywords to files, and a closing line linking the skills index.
 - `README.md`: the human-facing front door, in the section order of the skill standard: install, activation,
   the file table, the six non-negotiables, requirements, verification, the *Not this* table, contributing.
 - `references/*.md`: one topic per file, loaded on demand. `adaptation.md` (the seam contract) is the design

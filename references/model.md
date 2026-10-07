@@ -99,9 +99,11 @@ export type VatSummaryRow = { vatRate: VatRate } & InvoiceTotals;
  * Two decimals, half away from zero. `Math.round` alone rounds half toward positive infinity, so -0.125
  * would become -0.12 while 0.125 becomes 0.13, and a correction that negates a line would leave a
  * one-unit residue. Rounding the magnitude and restoring the sign makes roundMoney(-x) === -roundMoney(x).
+ * The scaled magnitude is cut to the 15 significant digits a double carries before it is rounded: 10.075
+ * is stored as 10.07499..., so 10.075 * 100 is 1007.4999999999999, and the half it stands for is lost.
  */
 export function roundMoney(n: number): number {
-  const magnitude = Math.round((Math.abs(n) + Number.EPSILON) * 100) / 100;
+  const magnitude = Math.round(Number((Math.abs(n) * 100).toPrecision(15))) / 100;
   if (magnitude === 0) return 0; // never -0, which fails strict equality checks against 0
   return n < 0 ? -magnitude : magnitude;
 }

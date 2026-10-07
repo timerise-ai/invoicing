@@ -40,9 +40,11 @@ filtered and paged, which component confirms a destructive action, and where a f
 module follows those conventions even where its templates do something else. A reviewer should not be able
 to tell that it arrived from outside.
 
-Add no dependency the host does not have. The core module needs none. `server-only` ships with Next.js
-apps that already use it; the KSeF bridge needs `qrcode`, and the Postgres store needs whatever client the
-host already has.
+Add no runtime dependency the host does not have. The core module needs none. `server-only` ships with
+Next.js apps that already use it, and is installed where it is missing; the KSeF bridge needs `qrcode`, and
+the Postgres store needs whatever client the host already has, never a new one. A host with no test runner
+installs vitest as a dev dependency, as [testing.md](testing.md) says: the package registry is not an
+external service, and the suites run as written.
 
 ## The domain rename
 
